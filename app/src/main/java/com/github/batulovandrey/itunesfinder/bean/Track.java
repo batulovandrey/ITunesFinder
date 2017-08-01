@@ -21,6 +21,9 @@ public class Track implements Serializable {
     private String mArtistName;
 
     @NonNull
+    private String mTrackName;
+
+    @NonNull
     private String mArtistViewUrl;
 
     @NonNull
@@ -29,8 +32,7 @@ public class Track implements Serializable {
     @NonNull
     private String mCoverUrl;
 
-    @NonNull
-    private String mTrackPrice;
+    private double mTrackPrice;
 
     public Track() {
         // empty Constructor needed by Jackson
@@ -41,6 +43,13 @@ public class Track implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getArtistName() {
         return mArtistName;
+    }
+
+    @NonNull
+    @JsonGetter("trackName")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public String getTrackName() {
+        return mTrackName;
     }
 
     @NonNull
@@ -64,16 +73,20 @@ public class Track implements Serializable {
         return mCoverUrl;
     }
 
-    @NonNull
     @JsonGetter("trackPrice")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public String getTrackPrice() {
+    public double getTrackPrice() {
         return mTrackPrice;
     }
 
     @JsonSetter("artistName")
     public void setArtistName(@NonNull String artistName) {
         mArtistName = artistName;
+    }
+
+    @JsonSetter("trackName")
+    public void setTrackName(@NonNull String trackName) {
+        mTrackName = trackName;
     }
 
     @JsonSetter("artistViewUrl")
@@ -92,7 +105,7 @@ public class Track implements Serializable {
     }
 
     @JsonSetter("trackPrice")
-    public void setTrackPrice(@NonNull String trackPrice) {
+    public void setTrackPrice(double trackPrice) {
         mTrackPrice = trackPrice;
     }
 
@@ -102,33 +115,30 @@ public class Track implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Track track = (Track) o;
-        return Objects.equal(mArtistName, track.mArtistName) &&
+        return Double.compare(track.mTrackPrice, mTrackPrice) == 0 &&
+                Objects.equal(mArtistName, track.mArtistName) &&
+                Objects.equal(mTrackName, track.mTrackName) &&
                 Objects.equal(mArtistViewUrl, track.mArtistViewUrl) &&
                 Objects.equal(mTrackPreviewUrl, track.mTrackPreviewUrl) &&
-                Objects.equal(mCoverUrl, track.mCoverUrl) &&
-                Objects.equal(mTrackPrice, track.mTrackPrice);
+                Objects.equal(mCoverUrl, track.mCoverUrl);
     }
 
     @JsonIgnore
     @Override
     public int hashCode() {
-        return Objects.hashCode(
-                mArtistName,
-                mArtistViewUrl,
-                mTrackPreviewUrl,
-                mCoverUrl,
-                mTrackPrice);
+        return Objects.hashCode(mArtistName, mTrackName, mArtistViewUrl, mTrackPreviewUrl, mCoverUrl, mTrackPrice);
     }
 
     @JsonIgnore
     @Override
     public String toString() {
-        return "Track{" +
-                "mArtistName='" + mArtistName + '\'' +
-                ", mArtistViewUrl='" + mArtistViewUrl + '\'' +
-                ", mTrackPreviewUrl='" + mTrackPreviewUrl + '\'' +
-                ", mCoverUrl='" + mCoverUrl + '\'' +
-                ", mTrackPrice='" + mTrackPrice + '\'' +
-                '}';
+        return Objects.toStringHelper(this)
+                .add("mArtistName", mArtistName)
+                .add("mTrackName", mTrackName)
+                .add("mArtistViewUrl", mArtistViewUrl)
+                .add("mTrackPreviewUrl", mTrackPreviewUrl)
+                .add("mCoverUrl", mCoverUrl)
+                .add("mTrackPrice", mTrackPrice)
+                .toString();
     }
 }
