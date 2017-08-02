@@ -13,27 +13,31 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.Toast;
 
 import com.github.batulovandrey.itunesfinder.bean.Track;
 import com.github.batulovandrey.itunesfinder.bean.TrackResponse;
 import com.github.batulovandrey.itunesfinder.net.ApiClient;
 import com.github.batulovandrey.itunesfinder.net.TrackService;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnItemClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Toolbar mToolbar;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        initToolbar();
+        setToolbar();
         handleIntent(getIntent());
     }
 
@@ -55,8 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
 
     @Override
     public void onItemClick(Track track) {
-        // TODO: 02.08.2017 go to new Activity
-        Toast.makeText(this, "here we are " + track.getTrackPreviewUrl(), Toast.LENGTH_SHORT).show();
+        startActivity(TrackDetailActivity.createExplicitIntent(this, track));
     }
 
     @Override
@@ -74,8 +77,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
         }
     }
 
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void setToolbar() {
         setSupportActionBar(mToolbar);
     }
 
@@ -103,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, MainFragment.newInstance(response))
-                .addToBackStack(null)
                 .commit();
     }
 }

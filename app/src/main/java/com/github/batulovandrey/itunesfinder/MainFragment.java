@@ -23,8 +23,8 @@ import butterknife.ButterKnife;
  * @author batul0ve 01/08/2017
  */
 public class MainFragment extends Fragment implements TrackClickListener {
-
-    private static final String EXTRA_TRACKS_RESPONS = "extra_tracks_respons";
+    public static final String TAG = MainFragment.class.getSimpleName();
+    private static final String EXTRA_TRACKS_RESPONSE = "extra_tracks_response";
 
     private OnItemClickListener mListener;
     private TrackResponse mTrackResponse;
@@ -40,7 +40,7 @@ public class MainFragment extends Fragment implements TrackClickListener {
     public static MainFragment newInstance(TrackResponse response) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putSerializable(EXTRA_TRACKS_RESPONS, response);
+        args.putSerializable(EXTRA_TRACKS_RESPONSE, response);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +60,7 @@ public class MainFragment extends Fragment implements TrackClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTrackResponse = (TrackResponse) getArguments().getSerializable(EXTRA_TRACKS_RESPONS);
+            mTrackResponse = (TrackResponse) getArguments().getSerializable(EXTRA_TRACKS_RESPONSE);
         }
         mAdapter = new TrackAdapter(mTrackResponse, this);
     }
