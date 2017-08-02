@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.Toast;
 
+import com.github.batulovandrey.itunesfinder.bean.Track;
 import com.github.batulovandrey.itunesfinder.bean.TrackResponse;
 import com.github.batulovandrey.itunesfinder.net.ApiClient;
 import com.github.batulovandrey.itunesfinder.net.TrackService;
@@ -23,7 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.OnItemClickListener {
+    private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar mToolbar;
 
     @Override
@@ -52,8 +54,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     }
 
     @Override
-    public void onFragmentInteraction(String string) {
-        Toast.makeText(getApplicationContext(), "here we are " + string, Toast.LENGTH_SHORT).show();
+    public void onItemClick(Track track) {
+        // TODO: 02.08.2017 go to new Activity
+        Toast.makeText(this, "here we are " + track.getTrackPreviewUrl(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -76,14 +79,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         setSupportActionBar(mToolbar);
     }
 
-    private void startFragment(String query) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container, MainFragment.newInstance(query, null))
-                .addToBackStack(null)
-                .commit();
-    }
-
     private void getDataFromServer(String query) {
         TrackService apiService = ApiClient.getRetrofit().create(TrackService.class);
         Call<TrackResponse> responseCall = apiService.getTracks(query);
@@ -93,14 +88,22 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
             public void onResponse(@NonNull Call<TrackResponse> call, @NonNull Response<TrackResponse> response) {
                 TrackResponse trackResponse = response.body();
                 if (trackResponse != null) {
-                    Log.d(MainActivity.class.getSimpleName(), trackResponse.toString());
+                    startFragment(trackResponse);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<TrackResponse> call, @NonNull Throwable t) {
-                Log.e(MainActivity.class.getSimpleName(), t.getMessage());
+                Log.e(TAG, t.getMessage());
             }
         });
+    }
+
+    private void startFragment(TrackResponse response) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container, MainFragment.newInstance(response))
+                .addToBackStack(null)
+                .commit();
     }
 }
