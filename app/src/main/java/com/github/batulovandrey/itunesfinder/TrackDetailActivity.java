@@ -59,10 +59,14 @@ public class TrackDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     private void getDataFromIntent() {
         mTrack = (Track) getIntent().getSerializableExtra(EXTRA_TRACK);
     }
-
 
     private void setDataToViews() {
         Picasso.with(this)
