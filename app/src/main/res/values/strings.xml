@@ -3,4 +3,5 @@
     <string name="search_hint">song name</string>
     <string name="play">play</string>
     <string name="pause">pause</string>
+    <string name="no_connection">нет соединения с интернетом</string>
 </resources>

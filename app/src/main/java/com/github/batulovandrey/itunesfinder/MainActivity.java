@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.Toast;
 
 import com.github.batulovandrey.itunesfinder.bean.Track;
 import com.github.batulovandrey.itunesfinder.bean.TrackResponse;
 import com.github.batulovandrey.itunesfinder.net.ApiClient;
 import com.github.batulovandrey.itunesfinder.net.TrackService;
+import com.github.batulovandrey.itunesfinder.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +41,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
 
         setToolbar();
         handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mToolbar.clearFocus();
     }
 
     @Override
@@ -68,12 +76,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
         handleIntent(intent);
     }
 
+    // region private methods
+
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            // TODO: 01.08.2017 use query for api
-//            startFragment(query);
-            getDataFromServer(query);
+            if (Utils.hasConnection(this)) {
+                getDataFromServer(query);
+            } else {
+                showNoConnectionMessage();
+            }
         }
     }
 
@@ -107,4 +119,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
         transaction.replace(R.id.container, MainFragment.newInstance(response))
                 .commit();
     }
+
+    private void showNoConnectionMessage() {
+        Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+    }
+
+    // endregion
 }
