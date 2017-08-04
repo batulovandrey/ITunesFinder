@@ -36,7 +36,7 @@
     <View
         android:layout_marginTop="@dimen/padding_small"
         android:layout_below="@id/track_name_text_view"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorDiv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"/>
 

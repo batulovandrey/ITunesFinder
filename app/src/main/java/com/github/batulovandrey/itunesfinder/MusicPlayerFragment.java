@@ -22,8 +22,8 @@ import butterknife.OnClick;
  * @author batul0ve on 02/08/2017
  */
 public class MusicPlayerFragment extends Fragment {
+    public static final String TAG = MusicPlayerFragment.class.getSimpleName();
     private static final String EXTRA_AUDIO_URL = "extra_audio_url";
-    private static final String TAG = MusicPlayerFragment.class.getSimpleName();
 
     @BindView(R.id.play_button)
     Button mPlayButton;
@@ -35,25 +35,15 @@ public class MusicPlayerFragment extends Fragment {
     AppCompatSeekBar mSeekBar;
 
     private String mAudioUrl;
+    private MediaPlayer mMediaPlayer = null;
+    private Handler mHandler;
 
     private boolean mIsAudioPlaying = false;
-    private MediaPlayer mMediaPlayer = null;
-    private Handler mHandler = new Handler();
     private double mStartTime = 0;
     private double mFinalTime = 0;
     private int mOneTimeOnly;
 
-    private Runnable UpdateSongTime = new Runnable() {
-        public void run() {
-            mStartTime = mMediaPlayer.getCurrentPosition();
-            mSeekBar.setProgress((int) mStartTime);
-            mHandler.postDelayed(this, 100);
-        }
-    };
-
-    public MusicPlayerFragment() {
-        // Required empty public constructor
-    }
+    private UpdateSongTime mUpdateSongTime;
 
     public static MusicPlayerFragment newInstance(String audioUrl) {
         MusicPlayerFragment fragment = new MusicPlayerFragment();
@@ -63,12 +53,16 @@ public class MusicPlayerFragment extends Fragment {
         return fragment;
     }
 
+    // region Lifecycle
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mAudioUrl = getArguments().getString(EXTRA_AUDIO_URL);
         }
+        mUpdateSongTime = new UpdateSongTime();
+        mHandler = new Handler();
     }
 
     @Override
@@ -87,6 +81,8 @@ public class MusicPlayerFragment extends Fragment {
         mOneTimeOnly = 0;
     }
 
+    // endregion
+
     @OnClick({R.id.play_button, R.id.pause_button})
     public void onButtonClick(Button button) {
         switch (button.getId()) {
@@ -98,6 +94,14 @@ public class MusicPlayerFragment extends Fragment {
                 break;
         }
     }
+
+    public void onBackPressed() {
+        mHandler.removeCallbacks(mUpdateSongTime);
+        if (mMediaPlayer != null)
+            mMediaPlayer.release();
+    }
+
+    // region private methods
 
     private void playAudio() {
         try {
@@ -119,7 +123,7 @@ public class MusicPlayerFragment extends Fragment {
                     mOneTimeOnly = 1;
                 }
                 mSeekBar.setProgress((int) mStartTime);
-                mHandler.postDelayed(UpdateSongTime, 100);
+                mHandler.postDelayed(mUpdateSongTime, 100);
                 mPauseButton.setEnabled(true);
                 mPlayButton.setEnabled(false);
             } else {
@@ -138,5 +142,15 @@ public class MusicPlayerFragment extends Fragment {
         mPlayButton.setEnabled(true);
         mPauseButton.setEnabled(false);
     }
-    // TODO: 03.08.2017 release music player
+
+    private class UpdateSongTime implements Runnable {
+        @Override
+        public void run() {
+            mStartTime = mMediaPlayer.getCurrentPosition();
+            mSeekBar.setProgress((int) mStartTime);
+            mHandler.postDelayed(this, 100);
+        }
+    }
+
+    // endregion
 }

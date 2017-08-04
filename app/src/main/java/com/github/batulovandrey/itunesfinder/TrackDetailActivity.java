@@ -21,7 +21,6 @@ import butterknife.ButterKnife;
  */
 
 public class TrackDetailActivity extends AppCompatActivity {
-
     private static final String EXTRA_TRACK = "extra_track";
 
     @BindView(R.id.cover_image_view)
@@ -62,7 +61,11 @@ public class TrackDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        MusicPlayerFragment musicPlayerFragment = (MusicPlayerFragment) mFragmentManager.findFragmentByTag(MusicPlayerFragment.TAG);
+        musicPlayerFragment.onBackPressed();
     }
+
+    // region private methods
 
     private void getDataFromIntent() {
         mTrack = (Track) getIntent().getSerializableExtra(EXTRA_TRACK);
@@ -82,7 +85,7 @@ public class TrackDetailActivity extends AppCompatActivity {
 
     private void fillMusicPlayerFragment() {
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.music_player_container, MusicPlayerFragment.newInstance(mTrack.getTrackPreviewUrl()))
+        transaction.replace(R.id.music_player_container, MusicPlayerFragment.newInstance(mTrack.getTrackPreviewUrl()), MusicPlayerFragment.TAG)
                 .commit();
     }
 
@@ -91,4 +94,6 @@ public class TrackDetailActivity extends AppCompatActivity {
         transaction.replace(R.id.artist_view_container, ArtistProfileFragment.newInstance(mTrack.getArtistViewUrl()))
                 .commit();
     }
+
+    // endregion
 }
