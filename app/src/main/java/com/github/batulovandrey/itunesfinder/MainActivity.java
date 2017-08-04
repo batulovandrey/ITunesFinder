@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.batulovandrey.itunesfinder.bean.Track;
@@ -27,11 +29,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Main Activity contains toolbar and container for data
+ *
+ * @author batul0ve on 01/08/2017
+ */
+
 public class MainActivity extends AppCompatActivity implements MainFragment.OnItemClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             if (Utils.hasConnection(this)) {
+                showProgressBar();
                 getDataFromServer(query);
             } else {
                 showNoConnectionMessage();
@@ -103,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
                 TrackResponse trackResponse = response.body();
                 if (trackResponse != null) {
                     startFragment(trackResponse);
+                    hideProgressBar();
                 }
             }
 
@@ -122,6 +135,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
 
     private void showNoConnectionMessage() {
         Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+    }
+
+    private void showProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 
     // endregion
