@@ -36,7 +36,7 @@ public class MainFragment extends Fragment implements TrackClickListener {
     public static MainFragment newInstance(TrackResponse response) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putSerializable(EXTRA_TRACKS_RESPONSE, response);
+        args.putParcelable(EXTRA_TRACKS_RESPONSE, response);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,9 +56,11 @@ public class MainFragment extends Fragment implements TrackClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTrackResponse = (TrackResponse) getArguments().getSerializable(EXTRA_TRACKS_RESPONSE);
+            mTrackResponse = getArguments().getParcelable(EXTRA_TRACKS_RESPONSE);
+            mAdapter = new TrackAdapter(mTrackResponse, this);
+        } else {
+            mAdapter = new TrackAdapter(new TrackResponse(), this);
         }
-        mAdapter = new TrackAdapter(mTrackResponse, this);
     }
 
     @Override

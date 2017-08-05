@@ -1,5 +1,7 @@
 package com.github.batulovandrey.itunesfinder.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -8,14 +10,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by batul0ve on 01.08.2017.
  */
 
-public class TrackResponse implements Serializable {
+public class TrackResponse implements Parcelable {
+    public static final ClassCreator CREATOR = new ClassCreator();
+
     private int mTrackCount;
 
     @NonNull
@@ -23,6 +27,26 @@ public class TrackResponse implements Serializable {
 
     public TrackResponse() {
         // empty constructor needed by Jackson
+    }
+
+    protected TrackResponse(Parcel in) {
+        mTrackCount = in.readInt();
+        mTracks = new ArrayList<>();
+        in.readList(mTracks, null);
+    }
+
+
+    @JsonIgnore
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @JsonIgnore
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mTrackCount);
+        dest.writeList(mTracks);
     }
 
     @JsonGetter("resultCount")
@@ -70,5 +94,17 @@ public class TrackResponse implements Serializable {
                 "mTrackCount=" + mTrackCount +
                 ", mTracks=" + mTracks +
                 '}';
+    }
+
+    private static final class ClassCreator implements Creator<TrackResponse> {
+        @Override
+        public TrackResponse createFromParcel(Parcel in) {
+            return new TrackResponse(in);
+        }
+
+        @Override
+        public TrackResponse[] newArray(int size) {
+            return new TrackResponse[size];
+        }
     }
 }

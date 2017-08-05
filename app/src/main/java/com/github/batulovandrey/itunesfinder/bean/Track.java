@@ -1,5 +1,7 @@
 package com.github.batulovandrey.itunesfinder.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -9,14 +11,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
-
 /**
  * @author batul0ve on 01.08.2017.
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Track implements Serializable {
+public class Track implements Parcelable {
+    public static final ClassCreator CREATOR = new ClassCreator();
+
     @NonNull
     private String mArtistName;
 
@@ -36,6 +38,33 @@ public class Track implements Serializable {
 
     public Track() {
         // empty Constructor needed by Jackson
+    }
+
+    protected Track(Parcel in) {
+        mArtistName = in.readString();
+        mTrackName = in.readString();
+        mArtistViewUrl = in.readString();
+        mTrackPreviewUrl = in.readString();
+        mCoverUrl = in.readString();
+        mTrackPrice = in.readDouble();
+    }
+
+
+    @JsonIgnore
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @JsonIgnore
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mArtistName);
+        dest.writeString(mTrackName);
+        dest.writeString(mArtistViewUrl);
+        dest.writeString(mTrackPreviewUrl);
+        dest.writeString(mCoverUrl);
+        dest.writeDouble(mTrackPrice);
     }
 
     @NonNull
@@ -141,4 +170,17 @@ public class Track implements Serializable {
                 .add("mTrackPrice", mTrackPrice)
                 .toString();
     }
+
+    public static final class ClassCreator implements Creator<Track> {
+        @Override
+        public Track createFromParcel(Parcel in) {
+            return new Track(in);
+        }
+
+        @Override
+        public Track[] newArray(int size) {
+            return new Track[size];
+        }
+    }
+
 }
