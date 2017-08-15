@@ -15,9 +15,10 @@ import butterknife.ButterKnife;
 /**
  * Fragment to show artist profile view
  *
- * @author batul0ve on 02/08/2018
+ * @author Andrey Batulov on 02/08/2017
  */
 public class ArtistProfileFragment extends Fragment {
+
     private static final String EXTRA_PROFILE_URL = "extra_profile_url";
 
     @BindView(R.id.web_view)
@@ -25,10 +26,10 @@ public class ArtistProfileFragment extends Fragment {
 
     private String mProfileUrl;
 
-    public static ArtistProfileFragment newInstance(String param1) {
+    public static ArtistProfileFragment newInstance(String param) {
         ArtistProfileFragment fragment = new ArtistProfileFragment();
         Bundle args = new Bundle();
-        args.putString(EXTRA_PROFILE_URL, param1);
+        args.putString(EXTRA_PROFILE_URL, param);
         fragment.setArguments(args);
         return fragment;
     }

@@ -19,9 +19,10 @@ import butterknife.OnClick;
 /**
  * Fragment to show Music Player
  *
- * @author batul0ve on 02/08/2017
+ * @author Andrey Batulov on 02/08/2017
  */
 public class MusicPlayerFragment extends Fragment {
+
     public static final String TAG = MusicPlayerFragment.class.getSimpleName();
     private static final String EXTRA_AUDIO_URL = "extra_audio_url";
 
@@ -36,14 +37,13 @@ public class MusicPlayerFragment extends Fragment {
 
     private String mAudioUrl;
     private MediaPlayer mMediaPlayer = null;
+    private UpdateSongTime mUpdateSongTime;
     private Handler mHandler;
 
     private boolean mIsAudioPlaying = false;
     private double mStartTime = 0;
     private double mFinalTime = 0;
     private int mOneTimeOnly;
-
-    private UpdateSongTime mUpdateSongTime;
 
     public static MusicPlayerFragment newInstance(String audioUrl) {
         MusicPlayerFragment fragment = new MusicPlayerFragment();

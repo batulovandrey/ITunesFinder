@@ -11,10 +11,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by batul0ve on 02.08.2017.
+ * @author Andrey Batulov on 02/08/2017
  */
 
 public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
     private TrackClickListener mClickListener;
 
     @BindView(R.id.cover_image_view)

@@ -12,11 +12,12 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.base.Objects;
 
 /**
- * @author batul0ve on 01.08.2017.
+ * @author Andrey Batulov on 01/08/2017
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Track implements Parcelable {
+
     public static final ClassCreator CREATOR = new ClassCreator();
 
     @NonNull
@@ -49,7 +50,6 @@ public class Track implements Parcelable {
         mTrackPrice = in.readDouble();
     }
 
-
     @JsonIgnore
     @Override
     public int describeContents() {
@@ -74,11 +74,21 @@ public class Track implements Parcelable {
         return mArtistName;
     }
 
+    @JsonSetter("artistName")
+    public void setArtistName(@NonNull String artistName) {
+        mArtistName = artistName;
+    }
+
     @NonNull
     @JsonGetter("trackName")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getTrackName() {
         return mTrackName;
+    }
+
+    @JsonSetter("trackName")
+    public void setTrackName(@NonNull String trackName) {
+        mTrackName = trackName;
     }
 
     @NonNull
@@ -88,11 +98,21 @@ public class Track implements Parcelable {
         return mArtistViewUrl;
     }
 
+    @JsonSetter("artistViewUrl")
+    public void setArtistViewUrl(@NonNull String artistViewUrl) {
+        mArtistViewUrl = artistViewUrl;
+    }
+
     @NonNull
     @JsonGetter("previewUrl")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getTrackPreviewUrl() {
         return mTrackPreviewUrl;
+    }
+
+    @JsonSetter("previewUrl")
+    public void setTrackPreviewUrl(@NonNull String trackPreviewUrl) {
+        mTrackPreviewUrl = trackPreviewUrl;
     }
 
     @NonNull
@@ -102,35 +122,15 @@ public class Track implements Parcelable {
         return mCoverUrl;
     }
 
+    @JsonSetter("artworkUrl100")
+    public void setCoverUrl(@NonNull String coverUrl) {
+        mCoverUrl = coverUrl;
+    }
+
     @JsonGetter("trackPrice")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public double getTrackPrice() {
         return mTrackPrice;
-    }
-
-    @JsonSetter("artistName")
-    public void setArtistName(@NonNull String artistName) {
-        mArtistName = artistName;
-    }
-
-    @JsonSetter("trackName")
-    public void setTrackName(@NonNull String trackName) {
-        mTrackName = trackName;
-    }
-
-    @JsonSetter("artistViewUrl")
-    public void setArtistViewUrl(@NonNull String artistViewUrl) {
-        mArtistViewUrl = artistViewUrl;
-    }
-
-    @JsonSetter("previewUrl")
-    public void setTrackPreviewUrl(@NonNull String trackPreviewUrl) {
-        mTrackPreviewUrl = trackPreviewUrl;
-    }
-
-    @JsonSetter("artworkUrl100")
-    public void setCoverUrl(@NonNull String coverUrl) {
-        mCoverUrl = coverUrl;
     }
 
     @JsonSetter("trackPrice")
@@ -171,7 +171,7 @@ public class Track implements Parcelable {
                 .toString();
     }
 
-    public static final class ClassCreator implements Creator<Track> {
+    private static final class ClassCreator implements Creator<Track> {
         @Override
         public Track createFromParcel(Parcel in) {
             return new Track(in);
@@ -182,5 +182,4 @@ public class Track implements Parcelable {
             return new Track[size];
         }
     }
-
 }

@@ -5,10 +5,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by batul0ve on 04.08.2017.
+ * @author Andrey Batulov on 04/08/2017
  */
 
 public class Utils {
+
     private Utils() {
         throw new IllegalStateException("Can't create object");
     }
@@ -19,7 +20,6 @@ public class Utils {
      * @param context Context
      * @return true if there is connection, false otherwise
      */
-
     public static boolean hasConnection(Context context) {
         boolean connected = false;
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

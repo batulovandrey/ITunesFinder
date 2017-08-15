@@ -32,10 +32,11 @@ import retrofit2.Response;
 /**
  * Main Activity contains toolbar and container for data
  *
- * @author batul0ve on 01/08/2017
+ * @author Andrey Batulov on 01/08/2017
  */
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnItemClickListener {
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
+        ButterKnife.bind(this);
         setToolbar();
         handleIntent(getIntent());
     }

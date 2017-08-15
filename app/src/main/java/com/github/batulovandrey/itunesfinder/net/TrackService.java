@@ -7,7 +7,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
- * Created by batul0ve on 01.08.2017.
+ * @author Andrey Batulov on 01/08/2017
  */
 
 public interface TrackService {

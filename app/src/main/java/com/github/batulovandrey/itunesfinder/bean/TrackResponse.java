@@ -14,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by batul0ve on 01.08.2017.
+ * @author Andrey Batulov on 01/08/2017
  */
 
 public class TrackResponse implements Parcelable {
+
     public static final ClassCreator CREATOR = new ClassCreator();
 
     private int mTrackCount;
@@ -34,7 +35,6 @@ public class TrackResponse implements Parcelable {
         mTracks = new ArrayList<>();
         in.readList(mTracks, null);
     }
-
 
     @JsonIgnore
     @Override
@@ -87,13 +87,12 @@ public class TrackResponse implements Parcelable {
         return Objects.hashCode(mTrackCount, mTracks);
     }
 
-    @JsonIgnore
     @Override
     public String toString() {
-        return "TrackResponse{" +
-                "mTrackCount=" + mTrackCount +
-                ", mTracks=" + mTracks +
-                '}';
+        return Objects.toStringHelper(this)
+                .add("mTrackCount", mTrackCount)
+                .add("mTracks", mTracks)
+                .toString();
     }
 
     private static final class ClassCreator implements Creator<TrackResponse> {

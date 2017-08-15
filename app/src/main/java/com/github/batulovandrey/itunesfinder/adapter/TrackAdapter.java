@@ -11,10 +11,11 @@ import com.github.batulovandrey.itunesfinder.bean.TrackResponse;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by batul0ve on 02.08.2017.
+ * @author Andrey Batulov on 02/08/2017
  */
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackViewHolder> {
+
     private TrackResponse mTrackResponse;
     private TrackClickListener mClickListener;
 

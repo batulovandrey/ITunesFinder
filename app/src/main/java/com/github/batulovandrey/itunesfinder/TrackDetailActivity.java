@@ -17,10 +17,12 @@ import butterknife.ButterKnife;
 
 /**
  * Activity to show detail of track
- * @author batul0ve on 02/02/2018
+ *
+ * @author Andrey Batulov on 02/02/2017
  */
 
 public class TrackDetailActivity extends AppCompatActivity {
+
     private static final String EXTRA_TRACK = "extra_track";
 
     @BindView(R.id.cover_image_view)
@@ -35,8 +37,8 @@ public class TrackDetailActivity extends AppCompatActivity {
     @BindView(R.id.price_text_view)
     TextView mPriceTextView;
 
+    private FragmentManager mFragmentManager;
     private Track mTrack;
-    FragmentManager mFragmentManager;
 
     public static Intent createExplicitIntent(Context context, Track track) {
         Intent intent = new Intent(context, TrackDetailActivity.class);
@@ -48,6 +50,7 @@ public class TrackDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_detail);
+
         ButterKnife.bind(this);
         getDataFromIntent();
         setDataToViews();

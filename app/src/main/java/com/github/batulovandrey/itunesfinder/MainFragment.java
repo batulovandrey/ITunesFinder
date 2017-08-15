@@ -20,18 +20,18 @@ import butterknife.ButterKnife;
 /**
  * Main Fragment to show list of items
  *
- * @author batul0ve 01/08/2017
+ * @author Andrey Batulov on 01/08/2017
  */
 public class MainFragment extends Fragment implements TrackClickListener {
-    public static final String TAG = MainFragment.class.getSimpleName();
+
     private static final String EXTRA_TRACKS_RESPONSE = "extra_tracks_response";
+
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
 
     private OnItemClickListener mListener;
     private TrackResponse mTrackResponse;
     private TrackAdapter mAdapter;
-
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
 
     public static MainFragment newInstance(TrackResponse response) {
         MainFragment fragment = new MainFragment();
@@ -58,8 +58,6 @@ public class MainFragment extends Fragment implements TrackClickListener {
         if (getArguments() != null) {
             mTrackResponse = getArguments().getParcelable(EXTRA_TRACKS_RESPONSE);
             mAdapter = new TrackAdapter(mTrackResponse, this);
-        } else {
-            mAdapter = new TrackAdapter(new TrackResponse(), this);
         }
     }
 
@@ -89,7 +87,7 @@ public class MainFragment extends Fragment implements TrackClickListener {
         }
     }
 
-    public interface OnItemClickListener {
+    interface OnItemClickListener {
         void onItemClick(Track track);
     }
 }
