@@ -44,12 +44,7 @@ public class MainFragment extends Fragment implements TrackClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnItemClickListener) {
-            mListener = (OnItemClickListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnItemClickListener");
-        }
+        mListener = (OnItemClickListener) getActivity();
     }
 
     @Override
@@ -63,14 +58,13 @@ public class MainFragment extends Fragment implements TrackClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -88,6 +82,7 @@ public class MainFragment extends Fragment implements TrackClickListener {
     }
 
     interface OnItemClickListener {
+
         void onItemClick(Track track);
     }
 }

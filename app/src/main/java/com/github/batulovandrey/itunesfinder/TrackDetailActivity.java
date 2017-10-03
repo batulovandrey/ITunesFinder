@@ -64,8 +64,6 @@ public class TrackDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MusicPlayerFragment musicPlayerFragment = (MusicPlayerFragment) mFragmentManager.findFragmentByTag(MusicPlayerFragment.TAG);
-        musicPlayerFragment.onBackPressed();
     }
 
     // region private methods

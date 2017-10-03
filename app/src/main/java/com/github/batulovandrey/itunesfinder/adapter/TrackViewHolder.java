@@ -16,8 +16,6 @@ import butterknife.ButterKnife;
 
 public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private TrackClickListener mClickListener;
-
     @BindView(R.id.cover_image_view)
     ImageView mCoverImageView;
 
@@ -26,6 +24,8 @@ public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     @BindView(R.id.track_name_text_view)
     TextView mTrackNameTextView;
+
+    private TrackClickListener mClickListener;
 
     public TrackViewHolder(View itemView, TrackClickListener listener) {
         super(itemView);

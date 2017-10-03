@@ -5,5 +5,6 @@ package com.github.batulovandrey.itunesfinder.adapter;
  */
 
 public interface TrackClickListener {
+
     void onClick(int position);
 }
