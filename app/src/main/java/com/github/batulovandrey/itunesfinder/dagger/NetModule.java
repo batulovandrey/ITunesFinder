@@ -1,5 +1,8 @@
 package com.github.batulovandrey.itunesfinder.dagger;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import com.github.batulovandrey.itunesfinder.net.TrackService;
 
 import javax.inject.Singleton;
@@ -42,5 +45,10 @@ public class NetModule {
     @Singleton
     TrackService provideTrackService(Retrofit retrofit) {
         return retrofit.create(TrackService.class);
+    }
+
+    @Provides
+    ConnectivityManager provideConnectivityManager(Context context) {
+        return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 }

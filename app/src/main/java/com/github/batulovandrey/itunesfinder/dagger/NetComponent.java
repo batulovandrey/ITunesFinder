@@ -1,5 +1,7 @@
 package com.github.batulovandrey.itunesfinder.dagger;
 
+import com.github.batulovandrey.itunesfinder.model.MainModel;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -11,4 +13,6 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, NetModule.class})
 public interface NetComponent {
+
+    void inject(MainModel model);
 }
