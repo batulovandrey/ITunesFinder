@@ -1,16 +1,17 @@
 package com.github.batulovandrey.itunesfinder;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.github.batulovandrey.itunesfinder.presenter.PlayerPresenter;
+import com.github.batulovandrey.itunesfinder.presenter.PlayerPresenterImpl;
+import com.github.batulovandrey.itunesfinder.view.PlayerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ import butterknife.OnClick;
  *
  * @author Andrey Batulov on 02/08/2017
  */
-public class MusicPlayerFragment extends Fragment {
+public class MusicPlayerFragment extends Fragment implements PlayerView {
 
     public static final String TAG = MusicPlayerFragment.class.getSimpleName();
     private static final String EXTRA_AUDIO_URL = "extra_audio_url";
@@ -35,15 +36,8 @@ public class MusicPlayerFragment extends Fragment {
     @BindView(R.id.seek_bar)
     AppCompatSeekBar mSeekBar;
 
+    private PlayerPresenter mPlayerPresenter;
     private String mAudioUrl;
-    private MediaPlayer mMediaPlayer = null;
-    private UpdateSongTime mUpdateSongTime;
-    private Handler mHandler;
-
-    private boolean mIsAudioPlaying = false;
-    private double mStartTime = 0;
-    private double mFinalTime = 0;
-    private int mOneTimeOnly;
 
     public static MusicPlayerFragment newInstance(String audioUrl) {
         MusicPlayerFragment fragment = new MusicPlayerFragment();
@@ -61,24 +55,26 @@ public class MusicPlayerFragment extends Fragment {
         if (getArguments() != null) {
             mAudioUrl = getArguments().getString(EXTRA_AUDIO_URL);
         }
-        mUpdateSongTime = new UpdateSongTime();
-        mHandler = new Handler();
+        mPlayerPresenter = new PlayerPresenterImpl(this);
+        mPlayerPresenter.onCreate();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_music_player, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_music_player, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPauseButton.setEnabled(false);
-        mMediaPlayer = new MediaPlayer();
-        mOneTimeOnly = 0;
+        ButterKnife.bind(this, view);
+        mPlayerPresenter.onViewCreated();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPlayerPresenter.onDestroyView();
     }
 
     // endregion
@@ -87,70 +83,31 @@ public class MusicPlayerFragment extends Fragment {
     public void onButtonClick(Button button) {
         switch (button.getId()) {
             case R.id.play_button:
-                playAudio();
+                mPlayerPresenter.onPlayButtonClick(mAudioUrl);
                 break;
             case R.id.pause_button:
-                pauseAudio();
+                mPlayerPresenter.onPauseButtonClick();
                 break;
         }
     }
 
-    public void onBackPressed() {
-        mHandler.removeCallbacks(mUpdateSongTime);
-        if (mMediaPlayer != null)
-            mMediaPlayer.release();
+    @Override
+    public void setSeekBarMax(int max) {
+        mSeekBar.setMax(max);
     }
 
-    // region private methods
-
-    private void playAudio() {
-        try {
-            if (!mIsAudioPlaying) {
-                mIsAudioPlaying = true;
-                if (mOneTimeOnly == 0) {
-                    mMediaPlayer.setDataSource(mAudioUrl);
-                    mMediaPlayer.prepare();
-                }
-                mMediaPlayer.start();
-                mFinalTime = mMediaPlayer.getDuration();
-                if (mStartTime == mFinalTime) {
-                    mStartTime = 0;
-                } else {
-                    mStartTime = mMediaPlayer.getCurrentPosition();
-                }
-                if (mOneTimeOnly == 0) {
-                    mSeekBar.setMax((int) mFinalTime);
-                    mOneTimeOnly = 1;
-                }
-                mSeekBar.setProgress((int) mStartTime);
-                mHandler.postDelayed(mUpdateSongTime, 100);
-                mPauseButton.setEnabled(true);
-                mPlayButton.setEnabled(false);
-            } else {
-                mIsAudioPlaying = false;
-                mMediaPlayer.release();
-                mMediaPlayer = null;
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "exception is here " + e.getMessage());
-        }
+    @Override
+    public void setSeekBarProgress(int progress) {
+        mSeekBar.setProgress(progress);
     }
 
-    private void pauseAudio() {
-        mIsAudioPlaying = false;
-        mMediaPlayer.pause();
-        mPlayButton.setEnabled(true);
-        mPauseButton.setEnabled(false);
+    @Override
+    public void setPlayButtonEnabled(boolean enabled) {
+        mPlayButton.setEnabled(enabled);
     }
 
-    private class UpdateSongTime implements Runnable {
-        @Override
-        public void run() {
-            mStartTime = mMediaPlayer.getCurrentPosition();
-            mSeekBar.setProgress((int) mStartTime);
-            mHandler.postDelayed(this, 100);
-        }
+    @Override
+    public void setPauseButtonEnabled(boolean enabled) {
+        mPauseButton.setEnabled(enabled);
     }
-
-    // endregion
 }
